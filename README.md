@@ -12,5 +12,3 @@ A full-stack task management application for families.
 - `FamilyTask.Core` - Business logic and domain models
 - `FamilyTask.Infrastructure` - Data access and external services
 - `family-task-app` - Angular 19 frontend application
-
-

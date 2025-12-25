@@ -1,0 +1,395 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\dtos\\taskdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\dtos\\memberdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FAE5A6-B442-49C4-8D5C-A09AA9A62334}|..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.infrastructure\\migrations\\20251224054022_makeassignedmemberidnullable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FAE5A6-B442-49C4-8D5C-A09AA9A62334}|..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\entities\\taskitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FAE5A6-B442-49C4-8D5C-A09AA9A62334}|..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.infrastructure\\repositories\\taskrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FAE5A6-B442-49C4-8D5C-A09AA9A62334}|..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.infrastructure\\repositories\\memberrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.api\\controllers\\taskscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|solutionrelative:controllers\\taskscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.api\\controllers\\memberscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|solutionrelative:controllers\\memberscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\services\\taskservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\services\\memberservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\contracts\\services\\itaskservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\contracts\\services\\imemberservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\contracts\\repositories\\itaskrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\contracts\\repositories\\imemberrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\entities\\member.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FAE5A6-B442-49C4-8D5C-A09AA9A62334}|..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.infrastructure\\migrations\\20251223110203_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FAE5A6-B442-49C4-8D5C-A09AA9A62334}|..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.infrastructure\\familytask.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.api\\familytask.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|solutionrelative:familytask.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.api\\familytask.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{C4AAEF1F-EE0D-4C2C-9369-A974498961B6}|FamilyTask.API.csproj|solutionrelative:familytask.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4756FD9B-BE8F-47FE-AC6D-FCCF41F8AA26}|..\\FamilyTask.Core\\FamilyTask.Core.csproj|e:\\bhavik-family-task\\familytaskapp\\familytask.core\\familytask.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "20251224054022_MakeAssignedMemberIdNullable.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Migrations\\20251224054022_MakeAssignedMemberIdNullable.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Infrastructure\\Migrations\\20251224054022_MakeAssignedMemberIdNullable.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Migrations\\20251224054022_MakeAssignedMemberIdNullable.cs",
+              "RelativeToolTip": "..\\FamilyTask.Infrastructure\\Migrations\\20251224054022_MakeAssignedMemberIdNullable.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-24T05:40:22.814Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "..\\FamilyTask.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAwwCkAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:49:42.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-23T10:54:11.84Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TaskItem.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Entities\\TaskItem.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Entities\\TaskItem.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Entities\\TaskItem.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Entities\\TaskItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:43:38.786Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MemberDto.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\DTOs\\MemberDto.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\DTOs\\MemberDto.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\DTOs\\MemberDto.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\DTOs\\MemberDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:45:59.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TaskDto.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\DTOs\\TaskDto.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\DTOs\\TaskDto.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\DTOs\\TaskDto.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\DTOs\\TaskDto.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAkwBkAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:46:18.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MemberRepository.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Repositories\\MemberRepository.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Infrastructure\\Repositories\\MemberRepository.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Repositories\\MemberRepository.cs",
+              "RelativeToolTip": "..\\FamilyTask.Infrastructure\\Repositories\\MemberRepository.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowDoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:50:17.196Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Mappings\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Mappings\\MappingProfile.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Mappings\\MappingProfile.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Mappings\\MappingProfile.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAkwBYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:47:50.823Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "TaskService.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Services\\TaskService.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Services\\TaskService.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Services\\TaskService.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Services\\TaskService.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAuwFoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:52:04.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TaskRepository.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Repositories\\TaskRepository.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Infrastructure\\Repositories\\TaskRepository.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Repositories\\TaskRepository.cs",
+              "RelativeToolTip": "..\\FamilyTask.Infrastructure\\Repositories\\TaskRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:50:58.615Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:54:25.51Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "TasksController.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\Controllers\\TasksController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TasksController.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\Controllers\\TasksController.cs",
+              "RelativeToolTip": "Controllers\\TasksController.cs",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAAwGsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:53:55.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "MembersController.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\Controllers\\MembersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MembersController.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\Controllers\\MembersController.cs",
+              "RelativeToolTip": "Controllers\\MembersController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAAwEEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:53:35.52Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "MemberService.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Services\\MemberService.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Services\\MemberService.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Services\\MemberService.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Services\\MemberService.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAuwDgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:51:49.902Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ITaskService.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Services\\ITaskService.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Contracts\\Services\\ITaskService.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Services\\ITaskService.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Contracts\\Services\\ITaskService.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:45:33.563Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "IMemberService.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Services\\IMemberService.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Contracts\\Services\\IMemberService.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Services\\IMemberService.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Contracts\\Services\\IMemberService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:45:17.607Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ITaskRepository.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Repositories\\ITaskRepository.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Contracts\\Repositories\\ITaskRepository.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Repositories\\ITaskRepository.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Contracts\\Repositories\\ITaskRepository.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAgwBIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:44:34.758Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "IMemberRepository.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Repositories\\IMemberRepository.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Contracts\\Repositories\\IMemberRepository.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Contracts\\Repositories\\IMemberRepository.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Contracts\\Repositories\\IMemberRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:44:18.979Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Member.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Entities\\Member.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\Entities\\Member.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\Entities\\Member.cs",
+              "RelativeToolTip": "..\\FamilyTask.Core\\Entities\\Member.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T10:43:22.946Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "20251223110203_InitialCreate.cs",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Migrations\\20251223110203_InitialCreate.cs",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Infrastructure\\Migrations\\20251223110203_InitialCreate.cs",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\Migrations\\20251223110203_InitialCreate.cs",
+              "RelativeToolTip": "..\\FamilyTask.Infrastructure\\Migrations\\20251223110203_InitialCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T11:02:04.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "FamilyTask.API.http",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\FamilyTask.API.http",
+              "RelativeDocumentMoniker": "FamilyTask.API.http",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\FamilyTask.API.http",
+              "RelativeToolTip": "FamilyTask.API.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-12-23T10:59:05.33Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "FamilyTask.Infrastructure.csproj",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj",
+              "RelativeToolTip": "..\\FamilyTask.Infrastructure\\FamilyTask.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-23T10:38:09.066Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "FamilyTask.API.csproj",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\FamilyTask.API.csproj",
+              "RelativeDocumentMoniker": "FamilyTask.API.csproj",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.API\\FamilyTask.API.csproj",
+              "RelativeToolTip": "FamilyTask.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-23T10:37:00.994Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "FamilyTask.Core.csproj",
+              "DocumentMoniker": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\FamilyTask.Core.csproj",
+              "RelativeDocumentMoniker": "..\\FamilyTask.Core\\FamilyTask.Core.csproj",
+              "ToolTip": "E:\\Bhavik-Family-task\\FamilyTaskApp\\FamilyTask.Core\\FamilyTask.Core.csproj",
+              "RelativeToolTip": "..\\FamilyTask.Core\\FamilyTask.Core.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-23T10:39:02.056Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

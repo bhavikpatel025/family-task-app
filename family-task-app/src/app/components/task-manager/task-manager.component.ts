@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -7,11 +7,35 @@ import { MemberManagerService } from '../../services/member-manager.service';
 import { Task } from '../../models/task.model';
 import { Member } from '../../models/member.model';
 
+// Import PrimeNG modules
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 @Component({
   selector: 'app-task-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    RouterModule,
+    ConfirmDialogModule,
+    ToastModule,
+  ],
+  providers: [ConfirmationService, MessageService],
   template: `
+    <!-- PrimeNG Toast Container -->
+    <p-toast position="top-right"></p-toast>
+    <!-- PrimeNG Confirmation Dialog -->
+    <p-confirmDialog
+      [style]="{ width: '450px' }"
+      header="Confirmation"
+      icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
+
     <div class="task-manager-container">
       <!-- Header -->
       <div class="manager-header">
@@ -193,15 +217,14 @@ import { Member } from '../../models/member.model';
                   </td>
                   <td class="col-actions">
                     <div class="action-buttons">
-                      <button class="action-btn action-toggle" 
+                      <!-- <button class="action-btn action-toggle" 
                               (click)="toggleTaskComplete(task)"
                               [title]="task.isComplete ? 'Mark as Incomplete' : 'Mark as Complete'"
                               type="button">
                         <i class="fa" [class.fa-check-square]="!task.isComplete" [class.fa-square]="task.isComplete"></i>
-                      </button>
+                      </button> -->
                       <button class="action-btn action-delete" 
-                              (click)="deleteTask(task.id)"
-                              [disabled]="task.isComplete"
+                              (click)="confirmDeleteTask(task)"
                               [title]="task.isComplete ? 'Cannot delete completed task' : 'Delete task'"
                               type="button">
                         <i class="fa fa-trash"></i>
@@ -219,15 +242,15 @@ import { Member } from '../../models/member.model';
   styles: [`
     .task-manager-container {
       min-height: 100%;
-      background: #f8fafb;
+      background: #f0f9ff;
     }
 
     /* ============ HEADER ============ */
     .manager-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #06b6d4;
       color: white;
-      padding: 40px 32px;
-      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+      padding: 48px 40px;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.15);
     }
 
     .header-content {
@@ -238,19 +261,21 @@ import { Member } from '../../models/member.model';
     .breadcrumb-nav {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      font-size: 13px;
+      gap: 16px;
+      margin-bottom: 20px;
+      font-size: 14px;
       font-weight: 500;
     }
 
     .breadcrumb-link {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.85);
       text-decoration: none;
       display: flex;
       align-items: center;
       gap: 6px;
       transition: color 0.2s ease;
+      font-weight: 600;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .breadcrumb-link:hover {
@@ -276,33 +301,36 @@ import { Member } from '../../models/member.model';
     }
 
     .page-subtitle {
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.8);
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.85);
       margin: 0;
+      font-weight: 600;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.3px;
     }
 
     /* ============ CONTENT ============ */
     .manager-content {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 32px;
+      padding: 40px;
     }
 
     /* Statistics Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+      margin-bottom: 40px;
     }
 
     .stat-card {
       background: white;
       border-radius: 12px;
-      padding: 20px;
+      padding: 28px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       border: 1px solid #e5e7eb;
       transition: all 0.3s ease;
@@ -326,7 +354,7 @@ import { Member } from '../../models/member.model';
     }
 
     .stat-total .stat-icon {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #06b6d4;
     }
 
     .stat-completed .stat-icon {
@@ -347,25 +375,28 @@ import { Member } from '../../models/member.model';
 
     .stat-label {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: #9ca3af;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
       margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .stat-value {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 800;
       color: #1f2937;
       margin: 4px 0 0 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: -0.5px;
     }
 
     /* Filters Panel */
     .filters-panel {
       background: white;
       border-radius: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       border: 1px solid #e5e7eb;
     }
@@ -374,22 +405,24 @@ import { Member } from '../../models/member.model';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px;
+      padding: 28px 32px;
       border-bottom: 1px solid #e5e7eb;
     }
 
     .filters-title {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 16px;
+      font-weight: 800;
       color: #1f2937;
       margin: 0;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.3px;
     }
 
     .filters-title i {
-      color: #667eea;
+      color: #06b6d4;
     }
 
     .btn-filter-toggle {
@@ -398,13 +431,15 @@ import { Member } from '../../models/member.model';
       color: #6b7280;
       padding: 8px 14px;
       border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.2px;
     }
 
     .btn-filter-toggle:hover {
@@ -413,32 +448,33 @@ import { Member } from '../../models/member.model';
     }
 
     .btn-filter-toggle.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #06b6d4;
       color: white;
       border-color: transparent;
     }
 
     .filters-content {
-      padding: 20px;
+      padding: 28px 32px;
       display: flex;
-      gap: 16px;
+      gap: 20px;
       flex-wrap: wrap;
       align-items: flex-end;
     }
 
     .filter-group {
       flex: 1;
-      min-width: 200px;
+      min-width: 220px;
     }
 
     .filter-label {
       display: block;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       color: #374151;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     /* Filter Input */
@@ -450,7 +486,7 @@ import { Member } from '../../models/member.model';
 
     .filter-input-icon {
       position: absolute;
-      left: 12px;
+      left: 14px;
       color: #d1d5db;
       font-size: 14px;
       pointer-events: none;
@@ -458,18 +494,20 @@ import { Member } from '../../models/member.model';
 
     .filter-input {
       width: 100%;
-      padding: 10px 36px 10px 36px;
+      padding: 12px 40px 12px 40px;
       border: 1px solid #e5e7eb;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 15px;
       color: #1f2937;
       transition: all 0.2s ease;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 500;
     }
 
     .filter-input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
     }
 
     .filter-input::placeholder {
@@ -500,21 +538,23 @@ import { Member } from '../../models/member.model';
 
     .filter-select {
       width: 100%;
-      padding: 10px 36px 10px 12px;
+      padding: 12px 40px 12px 14px;
       border: 1px solid #e5e7eb;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 15px;
       color: #1f2937;
       background: white;
       cursor: pointer;
       transition: all 0.2s ease;
       appearance: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 500;
     }
 
     .filter-select:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
     }
 
     .filter-select-icon {
@@ -528,24 +568,26 @@ import { Member } from '../../models/member.model';
     }
 
     .btn-refresh {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #06b6d4;
       color: white;
       border: none;
       padding: 10px 16px;
       border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 6px;
       height: 40px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.3px;
     }
 
     .btn-refresh:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
     }
 
     /* Tasks Panel */
@@ -567,27 +609,31 @@ import { Member } from '../../models/member.model';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 80px 40px;
+      padding: 100px 50px;
       text-align: center;
       color: #9ca3af;
     }
 
     .empty-icon {
-      font-size: 64px;
+      font-size: 72px;
       color: #d1d5db;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
 
     .empty-state h4 {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 800;
       color: #6b7280;
       margin: 0 0 8px 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.3px;
     }
 
     .empty-state p {
-      font-size: 14px;
+      font-size: 15px;
       margin: 0;
+      font-weight: 500;
+      color: #9ca3af;
     }
 
     /* Tasks Table */
@@ -602,7 +648,7 @@ import { Member } from '../../models/member.model';
     }
 
     .tasks-table thead th {
-      padding: 16px;
+      padding: 18px 20px;
       text-align: left;
       font-size: 12px;
       font-weight: 700;
@@ -612,7 +658,7 @@ import { Member } from '../../models/member.model';
     }
 
     .col-checkbox {
-      width: 50px;
+      width: 60px;
     }
 
     .col-task {
@@ -620,15 +666,15 @@ import { Member } from '../../models/member.model';
     }
 
     .col-assignee {
-      width: 200px;
+      width: 220px;
     }
 
     .col-status {
-      width: 140px;
+      width: 160px;
     }
 
     .col-actions {
-      width: 120px;
+      width: 140px;
       text-align: center;
     }
 
@@ -647,70 +693,76 @@ import { Member } from '../../models/member.model';
     }
 
     .task-row td {
-      padding: 14px 16px;
-      font-size: 14px;
+      padding: 16px 20px;
+      font-size: 15px;
       color: #1f2937;
     }
 
     .task-checkbox {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
-      accent-color: #667eea;
+      accent-color: #06b6d4;
     }
 
     .task-name {
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .task-name.text-completed {
       text-decoration: line-through;
       color: #9ca3af;
+      font-weight: 500;
     }
 
     /* Assignee Badge */
     .assignee-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .assignee-avatar {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: 600;
-      font-size: 11px;
+      font-size: 12px;
       flex-shrink: 0;
     }
 
     .assignee-name {
-      font-weight: 500;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .badge-unassigned {
       display: inline-block;
       background: #e5e7eb;
       color: #6b7280;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.2px;
     }
 
     /* Status Badge */
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      gap: 8px;
+      padding: 8px 14px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.2px;
     }
 
     .status-badge i {
@@ -731,17 +783,17 @@ import { Member } from '../../models/member.model';
     .action-buttons {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
     }
 
     .action-btn {
       background: none;
       border: 1px solid #e5e7eb;
       color: #6b7280;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
@@ -754,8 +806,8 @@ import { Member } from '../../models/member.model';
     }
 
     .action-toggle:hover:not(:disabled) {
-      color: #667eea;
-      border-color: #667eea;
+      color: #06b6d4;
+      border-color: #06b6d4;
     }
 
     .action-delete:hover:not(:disabled) {
@@ -930,7 +982,7 @@ import { Member } from '../../models/member.model';
     }
   `]
 })
-export class TaskManagerComponent implements OnInit {
+export class TaskManagerComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   members: Member[] = [];
@@ -938,6 +990,8 @@ export class TaskManagerComponent implements OnInit {
   filterText = '';
   filterMemberId = '';
   filterCompleted = false;
+
+  private destroy$ = new Subject<void>();
   
   get totalTasks(): number {
     return this.tasks.length;
@@ -957,23 +1011,34 @@ export class TaskManagerComponent implements OnInit {
 
   constructor(
     private taskService: TaskManagerService,
-    private memberService: MemberManagerService
+    private memberService: MemberManagerService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.loadAllTasks();
-    this.memberService.members$.subscribe(members => {
-      this.members = members;
-    });
+    this.memberService.members$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(members => {
+        this.members = members;
+      });
     this.memberService.loadMembers();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadAllTasks(): void {
     this.taskService.loadTasks();
-    this.taskService.tasks$.subscribe(tasks => {
-      this.tasks = tasks;
-      this.applyFilter();
-    });
+    this.taskService.tasks$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(tasks => {
+        this.tasks = tasks;
+        this.applyFilter();
+      });
   }
 
   toggleFilterCompleted(): void {
@@ -1002,22 +1067,46 @@ export class TaskManagerComponent implements OnInit {
   toggleTaskComplete(task: Task): void {
     if (task.isComplete) {
       this.taskService.updateTask(task.id, { isComplete: false });
+      this.showToast('success', 'Task Updated', 'Task has been marked as incomplete');
     } else {
       this.taskService.completeTask(task.id);
+      this.showToast('success', 'Task Updated', 'Task has been marked as complete');
     }
   }
 
+  confirmDeleteTask(task: Task): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete the task "${task.subject}"?`,
+      header: 'Delete Task Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Yes, Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.deleteTask(task.id);
+      },
+      // reject: () => {
+      //   this.showToast('info', 'Cancelled', 'Task deletion was cancelled');
+      // },
+    });
+  }
+
   deleteTask(taskId: string): void {
-    const task = this.tasks.find(t => t.id === taskId);
-    if (task && task.isComplete) {
-      if (!confirm('This task is completed. Are you sure you want to delete it?')) {
-        return;
-      }
-    } else {
-      if (!confirm('Are you sure you want to delete this task?')) {
-        return;
-      }
-    }
     this.taskService.deleteTask(taskId);
+    this.showToast('success', 'Task Deleted', 'Task has been deleted successfully');
+  }
+
+  private showToast(
+    severity: 'success' | 'info' | 'warn' | 'error',
+    summary: string,
+    detail: string
+  ): void {
+    this.messageService.add({
+      severity,
+      summary,
+      detail,
+      life: 3000,
+    });
   }
 }

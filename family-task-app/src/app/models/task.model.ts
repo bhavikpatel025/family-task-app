@@ -4,6 +4,7 @@ export interface Task {
   isComplete: boolean;
   assignedMemberId: string;
   assignedMember?: MemberSimplified;
+  createdAt?: string;
 }
 
 export interface MemberSimplified {

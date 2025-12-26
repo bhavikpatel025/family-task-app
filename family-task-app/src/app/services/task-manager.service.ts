@@ -60,51 +60,58 @@ export class TaskManagerService {
       .subscribe();
   }
 
-  createTask(subject: string): void {
-    if (!subject.trim()) return;
-    
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
-    
-    const task: CreateTask = { subject };
+ createTask(subject: string): void {
+  if (!subject.trim()) return;
 
-    this.apiService.createTask(task)
-      .pipe(
-        tap(newTask => {
-          const currentTasks = this.tasksSubject.value;
-          this.tasksSubject.next([...currentTasks, newTask]);
-          this.loadingSubject.next(false);
-        }),
-        catchError(error => {
-          this.errorSubject.next(error.message);
-          this.loadingSubject.next(false);
-          return of(null);
-        })
-      )
-      .subscribe();
-  }
+  this.loadingSubject.next(true);
+  this.errorSubject.next(null);
+
+  const task: CreateTask = { subject };
+
+  this.apiService.createTask(task)
+    .pipe(
+      tap(newTask => {
+        const currentTasks = this.tasksSubject.value;
+
+        //  NEW TASK AT TOP
+        this.tasksSubject.next([newTask, ...currentTasks]);
+
+        this.loadingSubject.next(false);
+      }),
+      catchError(error => {
+        this.errorSubject.next(error.message);
+        this.loadingSubject.next(false);
+        return of(null);
+      })
+    )
+    .subscribe();
+}
 
   createTaskForMember(subject: string, memberId: string): void {
-    if (!subject.trim() || !memberId) return;
-    
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
-    
-    this.apiService.createTaskForMember(memberId, { subject })
-      .pipe(
-        tap(newTask => {
-          const currentTasks = this.tasksSubject.value;
-          this.tasksSubject.next([...currentTasks, newTask]);
-          this.loadingSubject.next(false);
-        }),
-        catchError(error => {
-          this.errorSubject.next(error.message);
-          this.loadingSubject.next(false);
-          return of(null);
-        })
-      )
-      .subscribe();
-  }
+  if (!subject.trim() || !memberId) return;
+
+  this.loadingSubject.next(true);
+  this.errorSubject.next(null);
+
+  this.apiService.createTaskForMember(memberId, { subject })
+    .pipe(
+      tap(newTask => {
+        const currentTasks = this.tasksSubject.value;
+
+        //  NEW TASK AT TOP
+        this.tasksSubject.next([newTask, ...currentTasks]);
+
+        this.loadingSubject.next(false);
+      }),
+      catchError(error => {
+        this.errorSubject.next(error.message);
+        this.loadingSubject.next(false);
+        return of(null);
+      })
+    )
+    .subscribe();
+}
+
 
   completeTask(taskId: string): void {
     this.loadingSubject.next(true);

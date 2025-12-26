@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {
   CdkDrag,
@@ -11,6 +11,12 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+
+// Import PrimeNG modules for confirmation dialog and toast
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+
 import { MemberManagerService } from '../../services/member-manager.service';
 import { TaskManagerService } from '../../services/task-manager.service';
 import { Member } from '../../models/member.model';
@@ -26,12 +32,23 @@ import { takeUntil } from 'rxjs/operators';
     FormsModule,
     RouterModule,
     DragDropModule,
-    CdkDrag,
-    CdkDropList,
-    CdkDropListGroup,
+    // Import PrimeNG UI modules
+    ConfirmDialogModule,
+    ToastModule,
   ],
+  // Add PrimeNG service providers
+  providers: [ConfirmationService, MessageService],
   template: `
-    <div class="manager-container">
+    <!-- PrimeNG Toast Container -->
+    <p-toast position="top-right"></p-toast>
+    <!-- PrimeNG Confirmation Dialog -->
+    <p-confirmDialog
+      [style]="{ width: '450px' }"
+      header="Confirmation"
+      icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
+
+    <div class="manager-container" cdkDropListGroup>
       <div class="manager-grid">
         <!-- Sidebar - Family Manager Pane -->
         <aside class="sidebar-panel">
@@ -73,8 +90,15 @@ import { takeUntil } from 'rxjs/operators';
               <p>Loading members...</p>
             </div>
 
-            <!-- Members List -->
-            <nav class="members-list" *ngIf="!isLoading || members.length > 0">
+            <!-- Members List - NOW DRAGGABLE -->
+            <div
+              class="members-list"
+              *ngIf="!isLoading || members.length > 0"
+              cdkDropList
+              id="members-list"
+              [cdkDropListData]="members"
+              [cdkDropListConnectedTo]="getTaskDropListIds()"
+            >
               <!-- All Tasks Button -->
               <button
                 class="member-item all-tasks-item"
@@ -89,34 +113,34 @@ import { takeUntil } from 'rxjs/operators';
                 </div>
               </button>
 
-              <!-- Individual Members -->
-              <button
+              <!-- Individual Members - DRAGGABLE -->
+              <div
                 *ngFor="let member of members"
-                cdkDropList
-                [id]="'member-' + member.id"
-                [cdkDropListData]="getIncompleteTasks()"
-                [cdkDropListConnectedTo]="['task-list']"
-                (cdkDropListDropped)="onTaskDropped($event)"
-                (cdkDropListEntered)="onDragEntered(member)"
-                (cdkDropListExited)="onDragExited()"
-                class="member-item"
-                [class.active]="selectedMemberId === member.id"
-                [class.drag-over]="dragOverMemberId === member.id"
-                (click)="selectMember(member)"
+                class="member-item-wrapper"
+                cdkDrag
+                [cdkDragData]="member"
               >
                 <div
-                  class="member-avatar"
-                  [style.background-color]="member.avatar"
+                  class="member-item"
+                  [class.active]="selectedMemberId === member.id"
                 >
-                  {{ member.firstName.charAt(0) + member.lastName.charAt(0) }}
-                </div>
-                <div class="member-info">
-                  <span class="member-name"
-                    >{{ member.firstName }} {{ member.lastName }}</span
+                  <div class="member-drag-handle">
+                    <i class="fa fa-grip-vertical"></i>
+                  </div>
+                  <div
+                    class="member-avatar"
+                    [style.background-color]="member.avatar"
                   >
+                    {{ member.firstName.charAt(0) + member.lastName.charAt(0) }}
+                  </div>
+                  <div class="member-info" (click)="selectMember(member)">
+                    <span class="member-name"
+                      >{{ member.firstName }} {{ member.lastName }}</span
+                    >
+                  </div>
                 </div>
-              </button>
-            </nav>
+              </div>
+            </div>
           </div>
         </aside>
 
@@ -173,82 +197,93 @@ import { takeUntil } from 'rxjs/operators';
 
             <!-- Tasks Display -->
             <div class="tasks-section">
-              <!-- Incomplete Tasks -->
-              <div cdkDropListGroup>
+              <!-- Incomplete Tasks - NOW DROP ZONES -->
+              <div class="tasks-list">
+                <!-- No Tasks State -->
                 <div
-                  cdkDropList
-                  id="task-list"
-                  [cdkDropListData]="getIncompleteTasks()"
-                  [cdkDropListConnectedTo]="getMemberDropListIds()"
-                  (cdkDropListDropped)="onTaskDropped($event)"
-                  class="tasks-list"
+                  *ngIf="getIncompleteTasks().length === 0"
+                  class="empty-state"
                 >
-                  <!-- No Tasks State -->
-                  <div
-                    *ngIf="getIncompleteTasks().length === 0"
-                    class="empty-state"
-                  >
-                    <div class="empty-icon">
-                      <i class="fa fa-check-circle"></i>
-                    </div>
-                    <h4>No Tasks Yet</h4>
-                    <p>Create your first task to get started</p>
+                  <div class="empty-icon">
+                    <i class="fa fa-check-circle"></i>
+                  </div>
+                  <h4>No Tasks Yet</h4>
+                  <p>Create your first task to get started</p>
+                </div>
+
+                <!-- Task Items - DROP ZONES FOR MEMBERS -->
+                <div
+                  *ngFor="let task of getIncompleteTasks()"
+                  cdkDropList
+                  [id]="'task-' + task.id"
+                  [cdkDropListData]="[task]"
+                  (cdkDropListDropped)="onMemberDroppedOnTask($event, task)"
+                  (cdkDropListEntered)="onDragEntered(task)"
+                  (cdkDropListExited)="onDragExited()"
+                  class="task-card"
+                  [class.drag-over]="dragOverTaskId === task.id"
+                >
+                  <div class="task-status-icon">
+                    <i class="fa fa-bars"></i>
                   </div>
 
-                  <!-- Task Items -->
-                  <div
-                    *ngFor="let task of getIncompleteTasks()"
-                    cdkDrag
-                    [cdkDragData]="task"
-                    class="task-card"
-                    [class.task-dragging]="task.isComplete"
-                  >
-                    <div class="task-drag-handle">
-                      <i class="fa fa-grip-vertical"></i>
-                    </div>
+                  <div class="task-content">
+                    <input
+                      class="task-checkbox"
+                      type="checkbox"
+                      [checked]="task.isComplete"
+                      (change)="completeTask(task.id)"
+                      (click)="$event.stopPropagation()"
+                    />
+                    <span class="task-text">{{ task.subject }}</span>
+                  </div>
 
-                    <div class="task-content">
-                      <input
-                        class="task-checkbox"
-                        type="checkbox"
-                        [checked]="task.isComplete"
-                        (change)="completeTask(task.id)"
-                        (click)="$event.stopPropagation()"
-                      />
-                      <span class="task-text">{{ task.subject }}</span>
-                    </div>
-
-                    <!-- Assigned Member Badge -->
-                    <div *ngIf="task.assignedMember" class="task-assignee">
-                      <div
-                        class="assignee-avatar"
-                        [style.background-color]="task.assignedMember.avatar"
-                        [title]="
-                          task.assignedMember.firstName +
-                          ' ' +
-                          task.assignedMember.lastName
-                        "
-                      >
-                        {{
-                          task.assignedMember.firstName.charAt(0) +
-                            task.assignedMember.lastName.charAt(0)
-                        }}
-                      </div>
-                      <span class="assignee-name">{{
-                        task.assignedMember.firstName
-                      }}</span>
-                    </div>
-
-                    <!-- Delete Button -->
-                    <button
-                      class="btn btn-task-delete"
-                      (click)="deleteTask(task.id)"
-                      [disabled]="isLoading"
-                      title="Delete task"
+                  <!-- Assigned Member Badge -->
+                  <div *ngIf="task.assignedMember" class="task-assignee">
+                    <div
+                      class="assignee-avatar"
+                      [style.background-color]="task.assignedMember.avatar"
+                      [title]="
+                        task.assignedMember.firstName +
+                        ' ' +
+                        task.assignedMember.lastName
+                      "
                     >
-                      <i class="fa fa-trash"></i>
-                    </button>
+                      {{
+                        task.assignedMember.firstName.charAt(0) +
+                          task.assignedMember.lastName.charAt(0)
+                      }}
+                    </div>
+                    <span class="assignee-name">{{
+                      task.assignedMember.firstName
+                    }}</span>
+                    <!-- <button
+                      class="btn btn-unassign"
+                      (click)="unassignTask(task.id); $event.stopPropagation()"
+                      title="Unassign member"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button> -->
                   </div>
+
+                  <!-- Unassigned placeholder -->
+                  <div
+                    *ngIf="!task.assignedMember"
+                    class="task-assignee unassigned"
+                  >
+                    <i class="fa fa-user-plus"></i>
+                    <span>Drag member here</span>
+                  </div>
+
+                  <!-- Delete Button -->
+                  <button
+                    class="btn btn-task-delete"
+                    (click)="confirmDeleteTask(task)"
+                    [disabled]="isLoading"
+                    title="Delete task"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
                 </div>
               </div>
 
@@ -266,24 +301,38 @@ import { takeUntil } from 'rxjs/operators';
                     *ngFor="let task of getCompletedTasks()"
                     class="task-card task-completed"
                   >
-                    <div class="task-drag-handle disabled">
+                    <div class="task-status-icon disabled">
                       <i class="fa fa-lock"></i>
                     </div>
                     <div class="task-content">
-                      <input
+                      <!-- <input
                         class="task-checkbox"
                         type="checkbox"
                         [checked]="true"
                         (change)="completeTask(task.id)"
                         (click)="$event.stopPropagation()"
-                      />
+                      /> -->
                       <span class="task-text completed">{{
                         task.subject
                       }}</span>
                     </div>
+                    <div *ngIf="task.assignedMember" class="task-assignee">
+                      <div
+                        class="assignee-avatar"
+                        [style.background-color]="task.assignedMember.avatar"
+                      >
+                        {{
+                          task.assignedMember.firstName.charAt(0) +
+                            task.assignedMember.lastName.charAt(0)
+                        }}
+                      </div>
+                      <span class="assignee-name">{{
+                        task.assignedMember.firstName
+                      }}</span>
+                    </div>
                     <button
                       class="btn btn-task-delete"
-                      (click)="deleteTask(task.id)"
+                      (click)="confirmDeleteTask(task)"
                       [disabled]="isLoading"
                     >
                       <i class="fa fa-trash"></i>
@@ -354,8 +403,12 @@ import { takeUntil } from 'rxjs/operators';
                   [(ngModel)]="newMember.emailAddress"
                   name="emailAddress"
                   placeholder="john@example.com"
+                  (change)="validateEmail()"
                   required
                 />
+                <span *ngIf="emailError" class="email-error-message">
+                  {{ emailError }}
+                </span>
               </div>
 
               <!-- Roles Field -->
@@ -408,7 +461,10 @@ import { takeUntil } from 'rxjs/operators';
               class="btn btn-primary"
               (click)="saveNewMember()"
               [disabled]="
-                !memberForm.form.valid || !newMember.avatar || isLoading
+                !memberForm.form.valid ||
+                !newMember.avatar ||
+                isLoading ||
+                !isEmailValid
               "
             >
               <i class="fa fa-plus"></i> Add Member
@@ -424,7 +480,7 @@ import { takeUntil } from 'rxjs/operators';
         display: flex;
         flex-direction: column;
         height: 100%;
-        background: #f8fafb;
+        background: #f0f9ff;
       }
 
       .manager-grid {
@@ -448,21 +504,23 @@ import { takeUntil } from 'rxjs/operators';
       .panel-header {
         padding: 24px 20px;
         border-bottom: 1px solid #e5e7eb;
-        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        background: #f0fdfb;
       }
 
       .panel-title {
-        font-size: 16px;
-        font-weight: 700;
+        font-size: 18px;
+        font-weight: 800;
         color: #1f2937;
         margin: 0;
         display: flex;
         align-items: center;
         gap: 8px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.4px;
       }
 
       .panel-title i {
-        color: #667eea;
+        color: #06b6d4;
         font-size: 18px;
       }
 
@@ -474,6 +532,7 @@ import { takeUntil } from 'rxjs/operators';
         flex-direction: column;
         gap: 16px;
       }
+
       /* Color Picker - Horizontal Circle Layout */
       .color-picker-horizontal {
         display: flex;
@@ -512,6 +571,7 @@ import { takeUntil } from 'rxjs/operators';
         font-weight: bold;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       }
+
       @media (max-width: 768px) {
         .color-picker-horizontal {
           gap: 8px;
@@ -528,23 +588,25 @@ import { takeUntil } from 'rxjs/operators';
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 10px;
         width: 100%;
-        padding: 12px 16px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 14px 20px;
+        background: #06b6d4;
         color: white;
         border: none;
         border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
+        font-weight: 700;
+        font-size: 15px;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.3px;
       }
 
       .btn-add-member:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4);
       }
 
       .btn-add-member:disabled {
@@ -612,7 +674,7 @@ import { takeUntil } from 'rxjs/operators';
         width: 32px;
         height: 32px;
         border: 3px solid #e5e7eb;
-        border-top-color: #667eea;
+        border-top-color: #0891b2;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
       }
@@ -630,43 +692,53 @@ import { takeUntil } from 'rxjs/operators';
         gap: 8px;
       }
 
+      /* Member Item Wrapper for Drag */
+      .member-item-wrapper {
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .member-item-wrapper:active {
+        cursor: grabbing;
+      }
+
       .member-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px 14px;
+        gap: 14px;
+        padding: 16px 18px;
         background: white;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
-        cursor: pointer;
         transition: all 0.2s ease;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 500;
         color: #374151;
         text-align: left;
+        width: 100%;
+        pointer-events: auto;
       }
 
       .member-item:hover {
-        background: #f9fafb;
+        background: #f0f9ff;
         border-color: #d1d5db;
       }
 
       .member-item.active {
-        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-        border-color: #667eea;
+        background: #f0fdfb;
+        border-color: #06b6d4;
         color: #1f2937;
       }
 
-      .member-item.drag-over {
-        background: #dbeafe;
-        border: 2px dashed #667eea;
-        padding: 11px 13px;
+      .all-tasks-item {
+        width: 100%;
       }
 
       .all-tasks-item .member-icon {
         width: 36px;
         height: 36px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #06b6d4;
         border-radius: 6px;
         display: flex;
         align-items: center;
@@ -674,6 +746,19 @@ import { takeUntil } from 'rxjs/operators';
         color: white;
         font-size: 14px;
         flex-shrink: 0;
+      }
+
+      .member-drag-handle {
+        color: #9ca3af;
+        font-size: 14px;
+        flex-shrink: 0;
+        transition: color 0.2s ease;
+        padding: 4px;
+        pointer-events: none;
+      }
+
+      .member-item-wrapper:hover .member-drag-handle {
+        color: #06b6d4;
       }
 
       .member-avatar {
@@ -694,6 +779,7 @@ import { takeUntil } from 'rxjs/operators';
         flex-direction: column;
         gap: 2px;
         min-width: 0;
+        flex: 1;
       }
 
       .member-name {
@@ -704,24 +790,18 @@ import { takeUntil } from 'rxjs/operators';
         text-overflow: ellipsis;
       }
 
-      .member-tasks {
-        font-size: 12px;
-        color: #9ca3af;
-        font-weight: 400;
-      }
-
       /* ============ MAIN PANEL ============ */
       .main-panel {
         display: flex;
         flex-direction: column;
         height: 100%;
-        background: #f8fafb;
+        background: #f0f9ff;
       }
 
       .panel-header-main {
         background: white;
         border-bottom: 1px solid #e5e7eb;
-        padding: 10px 32px;
+        padding: 24px 40px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       }
 
@@ -732,35 +812,37 @@ import { takeUntil } from 'rxjs/operators';
       }
 
       .section-title {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 22px;
+        font-weight: 800;
         color: #1f2937;
         margin: 0;
         display: flex;
         align-items: center;
         gap: 10px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.4px;
       }
 
       .section-title i {
-        color: #667eea;
+        color: #06b6d4;
         font-size: 22px;
       }
 
       .section-subtitle {
         font-size: 13px;
         color: #9ca3af;
-        margin: 4px 0 0 28px;
+        margin: 6px 0 0 32px;
       }
 
       .panel-content {
         flex: 1;
         overflow-y: auto;
-        padding: 32px;
+        padding: 40px;
       }
 
       /* Create Task Section */
       .create-task-section {
-        margin-bottom: 16px;
+        margin-bottom: 28px;
       }
 
       .input-wrapper {
@@ -770,30 +852,32 @@ import { takeUntil } from 'rxjs/operators';
         background: white;
         border: 1px solid #e5e7eb;
         border-radius: 10px;
-        padding: 0 16px;
+        padding: 0 18px;
         transition: all 0.3s ease;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       }
 
       .input-wrapper:focus-within {
-        border-color: #667eea;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        border-color: #06b6d4;
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
       }
 
       .input-icon {
         color: #d1d5db;
-        margin-right: 4px;
+        margin-right: 8px;
         font-size: 16px;
       }
 
       .task-input {
         flex: 1;
         border: none;
-        padding: 14px 0;
-        font-size: 15px;
+        padding: 16px 0;
+        font-size: 16px;
         color: #1f2937;
         background: transparent;
         outline: none;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 500;
       }
 
       .task-input::placeholder {
@@ -801,10 +885,10 @@ import { takeUntil } from 'rxjs/operators';
       }
 
       .btn-create-task {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #06b6d4;
         color: white;
         border: none;
-        padding: 10px 16px;
+        padding: 12px 20px;
         border-radius: 6px;
         cursor: pointer;
         font-weight: 600;
@@ -816,7 +900,7 @@ import { takeUntil } from 'rxjs/operators';
 
       .btn-create-task:hover:not(:disabled) {
         transform: translateX(2px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
       }
 
       .btn-create-task:disabled {
@@ -828,13 +912,13 @@ import { takeUntil } from 'rxjs/operators';
       .tasks-section {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 20px;
       }
 
       .tasks-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
         min-height: auto;
       }
 
@@ -856,41 +940,50 @@ import { takeUntil } from 'rxjs/operators';
       }
 
       .empty-state h4 {
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 20px;
+        font-weight: 800;
         color: #6b7280;
         margin: 0 0 8px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.3px;
       }
 
       .empty-state p {
-        font-size: 14px;
+        font-size: 15px;
         margin: 0;
+        font-weight: 500;
+        color: #9ca3af;
       }
 
-      /* Task Cards */
+      /* Task Cards - NOW DROP ZONES */
       .task-card {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 14px 16px;
+        gap: 16px;
+        padding: 18px 20px;
         background: white;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         transition: all 0.2s ease;
-        cursor: move;
+        min-height: 70px;
       }
 
       .task-card:hover {
         background: #f9fafb;
         border-color: #d1d5db;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        transform: translateY(-1px);
+      }
+
+      .task-card.drag-over {
+        background: #cffafe;
+        border: 2px dashed #06b6d4;
+        box-shadow: 0 4px 16px rgba(6, 182, 212, 0.2);
+        transform: scale(1.02);
       }
 
       .task-card.task-completed {
         background: #f9fafb;
         opacity: 0.7;
-        cursor: default;
       }
 
       .task-card.task-completed:hover {
@@ -898,43 +991,41 @@ import { takeUntil } from 'rxjs/operators';
         box-shadow: none;
       }
 
-      .task-drag-handle {
+      .task-status-icon {
         color: #d1d5db;
-        cursor: grab;
         font-size: 14px;
         flex-shrink: 0;
         transition: color 0.2s ease;
       }
 
-      .task-drag-handle.disabled {
+      .task-status-icon.disabled {
         color: #9ca3af;
-        cursor: not-allowed;
       }
 
-      .task-card:hover .task-drag-handle {
+      .task-card:hover .task-status-icon {
         color: #9ca3af;
       }
 
       .task-content {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         flex: 1;
         min-width: 0;
       }
 
       .task-checkbox {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         cursor: pointer;
-        accent-color: #667eea;
+        accent-color: #06b6d4;
         flex-shrink: 0;
       }
 
       .task-text {
-        font-size: 14px;
+        font-size: 15px;
         color: #1f2937;
-        font-weight: 500;
+        font-weight: 600;
       }
 
       .task-text.completed {
@@ -945,28 +1036,55 @@ import { takeUntil } from 'rxjs/operators';
       .task-assignee {
         display: flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 10px;
+        gap: 8px;
+        padding: 6px 14px;
         background: #f3f4f6;
         border-radius: 6px;
-        font-size: 12px;
+        font-size: 13px;
         color: #6b7280;
       }
 
+      .task-assignee.unassigned {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px dashed #fbbf24;
+      }
+
+      .task-assignee.unassigned i {
+        color: #f59e0b;
+      }
+
       .assignee-avatar {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         font-weight: 600;
-        font-size: 10px;
+        font-size: 11px;
       }
 
       .assignee-name {
         font-weight: 500;
+      }
+
+      .btn-unassign {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        font-size: 12px;
+        margin-left: 4px;
+      }
+
+      .btn-unassign:hover {
+        background: #fee2e2;
+        color: #dc2626;
       }
 
       .btn-task-delete {
@@ -974,10 +1092,10 @@ import { takeUntil } from 'rxjs/operators';
         border: none;
         color: #9ca3af;
         cursor: pointer;
-        padding: 4px 8px;
+        padding: 6px 10px;
         border-radius: 4px;
         transition: all 0.2s ease;
-        font-size: 14px;
+        font-size: 15px;
         flex-shrink: 0;
       }
 
@@ -993,19 +1111,19 @@ import { takeUntil } from 'rxjs/operators';
 
       /* Completed Tasks Section */
       .completed-tasks-section {
-        margin-top: 12px;
-        padding-top: 12px;
+        margin-top: 20px;
+        padding-top: 20px;
         border-top: 1px solid #e5e7eb;
       }
 
       .completed-header {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 13px;
+        gap: 10px;
+        font-size: 14px;
         font-weight: 600;
         color: #9ca3af;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
@@ -1017,7 +1135,7 @@ import { takeUntil } from 'rxjs/operators';
       .completed-list {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 12px;
       }
 
       /* ============ MODAL ============ */
@@ -1068,10 +1186,12 @@ import { takeUntil } from 'rxjs/operators';
       }
 
       .modal-title {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 20px;
+        font-weight: 800;
         color: #1f2937;
         margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.3px;
       }
 
       .modal-close {
@@ -1098,14 +1218,14 @@ import { takeUntil } from 'rxjs/operators';
       .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        gap: 20px;
       }
 
       .form-group {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        margin-bottom: 16px;
+        gap: 10px;
+        margin-bottom: 20px;
       }
 
       .form-group:last-child {
@@ -1114,78 +1234,50 @@ import { takeUntil } from 'rxjs/operators';
 
       .form-label {
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 700;
         color: #374151;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.6px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
 
       .form-input {
-        padding: 10px 12px;
+        padding: 12px 14px;
         border: 1px solid #e5e7eb;
         border-radius: 6px;
-        font-size: 14px;
+        font-size: 15px;
         color: #1f2937;
         transition: all 0.2s ease;
-        font-family: inherit;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 500;
       }
 
       .form-input:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #06b6d4;
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
       }
 
       .form-input::placeholder {
         color: #d1d5db;
       }
 
-      /* Color Picker */
-      .color-picker {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-      }
-
-      .color-option {
-        width: 100%;
-        aspect-ratio: 1;
-        border-radius: 8px;
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: currentColor;
-      }
-
-      .color-option:hover {
-        transform: scale(1.05);
-        border-color: #d1d5db;
-      }
-
-      .color-option.selected {
-        border-color: #1f2937;
-        box-shadow: 0 0 0 2px white, 0 0 0 4px #1f2937;
-        transform: scale(1.05);
-      }
-
-      .color-option i {
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      /* Email Error Message */
+      .email-error-message {
+        font-size: 13px;
+        color: #dc2626;
+        margin-top: -8px;
+        font-weight: 500;
       }
 
       /* Modal Footer */
       .modal-footer {
-        padding: 16px 24px;
+        padding: 20px 32px;
         background: #f9fafb;
         border-top: 1px solid #e5e7eb;
         display: flex;
         justify-content: flex-end;
-        gap: 12px;
+        gap: 16px;
       }
 
       /* Buttons */
@@ -1193,25 +1285,27 @@ import { takeUntil } from 'rxjs/operators';
         padding: 10px 16px;
         border: none;
         border-radius: 6px;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 15px;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.3px;
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
         color: white;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
       }
 
       .btn-primary:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4);
       }
 
       .btn-secondary {
@@ -1232,7 +1326,7 @@ import { takeUntil } from 'rxjs/operators';
       .cdk-drag-preview {
         box-sizing: border-box;
         border-radius: 8px;
-        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 16px rgba(6, 182, 212, 0.3);
         opacity: 0.95;
       }
 
@@ -1296,10 +1390,6 @@ import { takeUntil } from 'rxjs/operators';
         .form-row {
           grid-template-columns: 1fr;
         }
-
-        .color-picker {
-          grid-template-columns: repeat(4, 1fr);
-        }
       }
 
       @media (max-width: 480px) {
@@ -1338,10 +1428,6 @@ import { takeUntil } from 'rxjs/operators';
           width: 100%;
         }
 
-        .color-picker {
-          grid-template-columns: repeat(4, 1fr);
-        }
-
         .modal-content {
           width: 95%;
           border-radius: 16px;
@@ -1358,27 +1444,31 @@ export class FamilyManagerComponent implements OnInit, OnDestroy {
   newTaskSubject = '';
   isLoading = false;
   error: string | null = null;
-  dragOverMemberId: string | null = null;
+  dragOverTaskId: string | null = null;
 
   showAddMemberModal = false;
   newMember = this.initializeNewMember();
+  emailError: string | null = null;
+  isEmailValid = false;
 
   avatarColors = [
-    '#FF6B6B', // Red
-    '#FFA500', // Orange
-    '#FFD93D', // Yellow
-    '#6BCB77', // Green
-    '#4D96FF', // Blue
-    '#9D84B7', // Purple
-    '#FF9FF3', // Pink
-    '#A8A8A8', // Gray
+    '#FF6B6B',
+    '#FFA500',
+    '#FFD93D',
+    '#6BCB77',
+    '#4D96FF',
+    '#9D84B7',
+    '#FF9FF3',
+    '#A8A8A8',
   ];
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private memberService: MemberManagerService,
-    private taskService: TaskManagerService
+    private taskService: TaskManagerService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -1461,55 +1551,101 @@ export class FamilyManagerComponent implements OnInit, OnDestroy {
       } else {
         this.taskService.createTask(this.newTaskSubject);
       }
+      this.showToast(
+        'success',
+        'Task Created',
+        'New task has been created successfully'
+      );
       this.newTaskSubject = '';
     }
   }
 
   completeTask(taskId: string): void {
     this.taskService.completeTask(taskId);
+    this.showToast(
+      'success',
+      'Task Updated',
+      'Task status has been updated successfully'
+    );
+  }
+
+  unassignTask(taskId: string): void {
+    this.taskService.assignTaskToMember(taskId, '');
+    this.showToast(
+      'info',
+      'Task Unassigned',
+      'Task has been unassigned from member'
+    );
+  }
+
+  confirmDeleteTask(task: Task): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete the task "${task.subject}"?`,
+      header: 'Delete Task Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Yes, Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.deleteTask(task.id);
+      },
+    });
   }
 
   deleteTask(taskId: string): void {
-    if (!confirm('Are you sure you want to delete this task?')) {
-      return;
-    }
     this.taskService.deleteTask(taskId);
+    this.showToast(
+      'success',
+      'Task Deleted',
+      'Task has been deleted successfully'
+    );
   }
 
   selectAvatarColor(color: string): void {
     this.newMember.avatar = color;
   }
 
-  onDragEntered(member: Member): void {
-    this.dragOverMemberId = member.id;
+  onDragEntered(task: Task): void {
+    this.dragOverTaskId = task.id;
   }
 
   onDragExited(): void {
-    this.dragOverMemberId = null;
+    this.dragOverTaskId = null;
   }
 
-  onTaskDropped(event: CdkDragDrop<Task[]>): void {
-    const task: Task = event.item.data;
-
-    if (task.isComplete) {
-      console.warn('Cannot move completed task');
-      return;
-    }
-
-    if (event.previousContainer === event.container) {
-      const incompleteTasks = this.getIncompleteTasks();
-      moveItemInArray(incompleteTasks, event.previousIndex, event.currentIndex);
-    } else {
-      const memberId = event.container.id.replace('member-', '');
-
-      if (task && memberId) {
-        this.taskService.assignTaskToMember(task.id, memberId);
-      }
-    }
+  onMemberDroppedOnTask(event: CdkDragDrop<Task[]>, task: Task): void {
+  if (task.isComplete) {
+    this.showToast(
+      'warn',
+      'Cannot Assign',
+      'Cannot assign members to completed tasks'
+    );
+    this.dragOverTaskId = null;
+    return;
   }
 
-  getMemberDropListIds(): string[] {
-    return this.members.map((member) => `member-${member.id}`);
+  const member: Member = event.item.data;
+  if (!member) return;
+
+  task.assignedMember = member;
+
+  this.tasks = [...this.tasks];
+
+  this.taskService.assignTaskToMember(task.id, member.id);
+
+  this.showToast(
+    'success',
+    'Member Assigned',
+    `${member.firstName} ${member.lastName} assigned to "${task.subject}"`
+  );
+
+  this.dragOverTaskId = null;
+}
+
+
+  getTaskDropListIds(): string[] {
+    return this.getIncompleteTasks().map((task) => `task-${task.id}`);
   }
 
   getIncompleteTasks(): Task[] {
@@ -1526,13 +1662,33 @@ export class FamilyManagerComponent implements OnInit, OnDestroy {
     ).length;
   }
 
+  validateEmail(): void {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const email = this.newMember.emailAddress.trim();
+
+    if (!email) {
+      this.emailError = 'Email address is required';
+      this.isEmailValid = false;
+    } else if (!emailRegex.test(email)) {
+      this.emailError = 'Please enter a valid email address';
+      this.isEmailValid = false;
+    } else {
+      this.emailError = null;
+      this.isEmailValid = true;
+    }
+  }
+
   startAddMember(): void {
     this.showAddMemberModal = true;
     this.newMember = this.initializeNewMember();
+    this.emailError = null;
+    this.isEmailValid = false;
   }
 
   cancelAddMember(): void {
     this.showAddMemberModal = false;
+    this.emailError = null;
+    this.isEmailValid = false;
   }
 
   saveNewMember(): void {
@@ -1540,14 +1696,35 @@ export class FamilyManagerComponent implements OnInit, OnDestroy {
       this.newMember.firstName &&
       this.newMember.lastName &&
       this.newMember.emailAddress &&
-      this.newMember.avatar
+      this.newMember.avatar &&
+      this.isEmailValid
     ) {
       this.memberService.createMember(this.newMember);
+      this.showToast(
+        'success',
+        'Member Added',
+        'Family member has been added successfully'
+      );
       this.showAddMemberModal = false;
+      this.emailError = null;
+      this.isEmailValid = false;
     }
   }
 
   clearError(): void {
     this.error = null;
+  }
+
+  private showToast(
+    severity: 'success' | 'info' | 'warn' | 'error',
+    summary: string,
+    detail: string
+  ): void {
+    this.messageService.add({
+      severity,
+      summary,
+      detail,
+      life: 3000,
+    });
   }
 }

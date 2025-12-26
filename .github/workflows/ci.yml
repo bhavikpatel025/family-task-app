@@ -11,36 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout code
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 2️⃣ Setup .NET 8
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
-    # 3️⃣ Restore & Build Backend
     - name: Restore .NET dependencies
-      run: dotnet restore FamilyTask.API
+      run: dotnet restore FamilyTask.API/FamilyTask.API.csproj
 
     - name: Build .NET API
-      run: dotnet build FamilyTask.API --no-restore
+      run: dotnet build FamilyTask.API/FamilyTask.API.csproj --no-restore
 
-    # 4️⃣ Setup Node.js for Angular
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    # 5️⃣ Install Angular dependencies
     - name: Install Angular dependencies
       run: |
         cd family-task-app
         npm install
 
-    # 6️⃣ Build Angular app
     - name: Build Angular
       run: |
         cd family-task-app
